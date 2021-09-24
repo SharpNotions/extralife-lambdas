@@ -1,11 +1,17 @@
-.PHONY: build clean deploy
+.PHONY: build clean deploy gomodgen
 
-build:
-	dep ensure -v
-	env GOOS=linux go build -ldflags="-s -w" -o bin/update-data update-data/main.go
+build: gomodgen
+	export GO111MODULE=on
+	go mod download
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/update-data lambdas/db.go lambdas/shared.go lambdas/update-data.go
+	env GOARCH=amd64 GOOS=linux go build -ldflags="-s -w" -o bin/get lambdas/db.go lambdas/shared.go lambdas/get.go
 
 clean:
-	rm -rf ./bin ./vendor Gopkg.lock
+	rm -rf ./bin ./vendor go.sum
 
-deploy: clean build
+deploy: build
 	sls deploy --verbose
+
+gomodgen:
+	chmod u+x gomod.sh
+	./gomod.sh

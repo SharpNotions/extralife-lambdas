@@ -41,17 +41,7 @@ At the moment the data _I think_ we need is something like this
     },
     "sumDonations": 355.0,
     "numDonations": 7
-  },
-  "activity": [
-    {
-      "message": "$200 USD Raised",
-      "createdDateUTC": "2021-09-20T14:35:28.573+0000",
-      "title": "You have passed 'Go'!",
-      "imageURL": "https://assets.donordrive.com/extralife/images/$event543$/badge_34E6C8FB_93F2_5CB2_2578AAB9F3C13F0D.png",
-      "type": "participantBadge"
-    },
-    ...
-  ]
+  }
 }
 
 ```
