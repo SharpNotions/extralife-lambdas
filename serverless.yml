@@ -1,17 +1,18 @@
-# Welcome to Serverless!
-#
-# This file is the main config file for your service.
-# It's very minimal at this point and uses default values.
-# You can always add more config options for more control.
-# We've included some commented out config examples here.
-# Just uncomment any of them to get that config option.
-#
-# For full config options, check the docs:
-#    docs.serverless.com
-#
-# Happy Coding!
-
 service: extralife
+
+plugins:
+  - serverless-domain-manager
+
+custom:
+  stage:
+  customDomain:
+    domainName: "${env:DOMAIN}"
+    createRoute53Record: true
+    endpointType: "regional"
+    securityPolicy: tls_1_2
+    apiType: rest
+    autoDomain: false
+
 # app and org for use with dashboard.serverless.com
 #app: your-app-name
 #org: your-org-name
@@ -19,14 +20,14 @@ service: extralife
 # You can pin your service to only deploy with a specific Serverless version
 # Check out our docs for more details
 frameworkVersion: "2"
-  
+
 provider:
   name: aws
   runtime: go1.x
   lambdaHashingVersion: 20201221
   environment:
-        PARTICIPANTS_TABLE: extra-life-participants-${opt:stage, "development"}
-        TEAMS_TABLE: extra-life-teams-${opt:stage, "development"}
+    PARTICIPANTS_TABLE: extra-life-participants-${opt:stage, "development"}
+    TEAMS_TABLE: extra-life-teams-${opt:stage, "development"}
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -48,8 +49,8 @@ package:
 functions:
   update-data:
     handler: bin/update-data
-    environment: ${file(env.json)}
     events:
+      - schedule: rate(5 minutes)
       - http:
           path: update-data
           method: get
@@ -62,7 +63,7 @@ functions:
 resources:
   Resources:
     ExtraLifeParticipantsTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
@@ -74,7 +75,7 @@ resources:
         BillingMode: PAY_PER_REQUEST
         TableName: 'extra-life-participants-${opt:stage, "development"}'
     ExtraLifeTeamsTable:
-      Type: 'AWS::DynamoDB::Table'
+      Type: "AWS::DynamoDB::Table"
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
@@ -84,4 +85,4 @@ resources:
           - AttributeName: teamId
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
-        TableName: 'extra-life-teams-${opt:stage, "development"}'        
+        TableName: 'extra-life-teams-${opt:stage, "development"}'
