@@ -1,4 +1,4 @@
-# extra life lamabdas
+# extra life lambdas
 
 ## Goal
 
@@ -6,7 +6,8 @@ Every Year Extra Life is DDoS'ed and data just is impossible to get. These lambd
 
 ## Why Go
 
-Why Not?
+First off why Not?
+Second I am not strong in the Go-fu so this was a chance to play and to get some practice. Things are WRONG. I am not surprised. But if it is wrong and you know how to fix then please open up a PR
 
 ## Plan
 
