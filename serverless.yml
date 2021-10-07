@@ -4,7 +4,6 @@ plugins:
   - serverless-domain-manager
 
 custom:
-  stage:
   customDomain:
     domainName: "${env:DOMAIN}"
     createRoute53Record: true
