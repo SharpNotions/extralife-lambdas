@@ -27,10 +27,9 @@ jobs:
       - name: serverless deploy
         uses: serverless/github-action@master
         with:
-          args: -c "serverless plugin install --name serverless-domain-manager && serverless deploy --verbose"
+          args: -c "serverless plugin install --name serverless-domain-manager && serverless deploy"
           entrypoint: /bin/sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID_DEV }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY_DEV }}
           DOMAIN: ${{ secrets.DOMAIN }}
-          SLS_DEBUG: true
