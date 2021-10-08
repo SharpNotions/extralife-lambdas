@@ -11,8 +11,8 @@ import (
 // Handler is our lambda handler invoked by the `lambda.Start` function call
 func Handler(ctx Request) (Response, error) {
 	// Make the call to the DAO with params found in the path
-	fmt.Println("Path vars: ", ctx.PathParameters["TeamId"])
-	teamId, err := strconv.Atoi(ctx.PathParameters["TeamId"])
+	fmt.Println("Path vars: ", ctx.PathParameters["teamId"])
+	teamId, err := strconv.Atoi(ctx.PathParameters["teamId"])
 	if err != nil {
 		fmt.Println("Failed to find convert value to int", err)
 		body, _ := json.Marshal(map[string]interface{}{
