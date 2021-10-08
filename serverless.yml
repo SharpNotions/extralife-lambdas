@@ -59,7 +59,12 @@ functions:
       - http:
           path: /participants/{participantId}
           method: get
-          
+  get-team:
+    handler: bin/get-team
+    events:
+      - http:
+          path: /teams/{teamId}
+          method: get
 resources:
   Resources:
     ExtraLifeParticipantsTable:
