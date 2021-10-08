@@ -53,12 +53,13 @@ functions:
       - http:
           path: update-data
           method: get
-  get:
-    handler: bin/get
+  get-participant:
+    handler: bin/get-participant
     events:
       - http:
-          path: /{participantId}
+          path: /participants/{participantId}
           method: get
+          
 resources:
   Resources:
     ExtraLifeParticipantsTable:
