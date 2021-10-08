@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"strconv"
 
@@ -9,6 +10,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 )
 
 type Link struct {
@@ -124,6 +126,48 @@ func ListTeams() ([]Team, error) {
 	var items []Team = make([]Team, 0)
 	for _, i := range result.Items {
 		item := Team{}
+
+		err = dynamodbattribute.UnmarshalMap(i, &item)
+
+		if err != nil {
+			fmt.Println(err.Error())
+		}
+		items = append(items, item)
+	}
+
+	return items, nil
+}
+
+func ListTeamLeaderboard(teamId int) ([]Participant, error) {
+	// Build the Dynamo client object
+	sess := session.Must(session.NewSession())
+	svc := dynamodb.New(sess)
+
+	// Perform the query
+	fmt.Println("Trying to read leaderboard from table: ", os.Getenv("PARTICIPANTS_TABLE"))
+
+	filt := expression.Name("teamId").Equal(expression.Value(teamId))
+	expr, err := expression.NewBuilder().WithFilter(filt).Build()
+	if err != nil {
+		log.Fatalf("Got error building expression: %s", err)
+	}
+
+	params := &dynamodb.ScanInput{
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
+		FilterExpression:          expr.Filter(),
+		ProjectionExpression:      expr.Projection(),
+		TableName:                 aws.String(os.Getenv("PARTICIPANTS_TABLE")),
+	}
+
+	result, err := svc.Scan(params)
+	if err != nil {
+		fmt.Println(err.Error())
+		return nil, err
+	}
+	var items []Participant = make([]Participant, 0)
+	for _, i := range result.Items {
+		item := Participant{}
 
 		err = dynamodbattribute.UnmarshalMap(i, &item)
 
