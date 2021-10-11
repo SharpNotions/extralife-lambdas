@@ -59,6 +59,7 @@ func Handler(ctx Request) (Response, error) {
 	item.NumDonations = participant.Info.NumDonations
 	item.SumDonations = participant.Info.SumDonations
 	item.Team = BuildTeamResult(team, participants)
+	item.Activity = participant.Activity
 
 	// Log and return result
 	jsonItem, _ := json.Marshal(item)

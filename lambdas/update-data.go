@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"strconv"
 	"time"
 
 	"context"
@@ -113,6 +114,25 @@ func FetchParticipant(participant string) (ParticipantResponse, error) {
 	return response, nil
 }
 
+func FetchParticipantActivity(participantId int) (Activity, error) {
+	//Build The URL string
+	URL := "https://www.extra-life.org/api/participants/" + strconv.Itoa(participantId) + "/activity"
+	//We make HTTP request using the Get function
+	resp, err := http.Get(URL)
+	if err != nil {
+		log.Fatal("Fetch Participant Activity Failed")
+	}
+	defer resp.Body.Close()
+	//Create a variable of the same type as our model
+	var response Activity
+	//Decode the data
+	if err := json.NewDecoder(resp.Body).Decode(&response); err != nil {
+		log.Fatal("Participant Response Failed to decode")
+	}
+	//Invoke the text output function & return it with nil as the error value
+	return response, nil
+}
+
 func GetTeams() ([]Team, error) {
 	items, err := ListTeams()
 	return items, err
@@ -154,6 +174,12 @@ func ProcessTeam(team Team) error {
 	}
 
 	for _, p := range teamParticipants {
+
+		activity, err := FetchParticipantActivity(p.ParticipantID)
+		if err != nil {
+			return err
+		}
+
 		item := Participant{}
 
 		var links []Link = make([]Link, 0)
@@ -173,6 +199,7 @@ func ProcessTeam(team Team) error {
 		item.Info.NumDonations = p.NumDonations
 		item.Info.SumDonations = p.SumDonations
 		item.Info.Links = links
+		item.Activity = activity
 
 		_, err = UpdateParticipant(item)
 		if err != nil {

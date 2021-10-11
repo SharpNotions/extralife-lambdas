@@ -34,6 +34,7 @@ type ParticipantResult struct {
 	SumDonations    float64    `json:"sumDonations"`
 	NumDonations    int        `json:"numDonations"`
 	Team            TeamResult `json:"team"`
+	Activity        Activity   `json:"activity"`
 }
 
 type TeamLeaderboardSorter []TeamLeaderboardResult
