@@ -29,7 +29,17 @@ type Participant struct {
 	ParticipantId int             `json:"participantId"`
 	TeamId        int             `json:"teamId"`
 	Info          ParticipantInfo `json:"info"`
+	Activity      Activity        `json: "activity"`
 	LastUpdated   string          `json:"lastUpdated"`
+}
+
+type Activity []struct {
+	Message        string  `json:"message,omitempty"`
+	Amount         float64 `json:"amount"`
+	CreatedDateUTC string  `json:"createdDateUTC"`
+	Title          string  `json:"title"`
+	ImageURL       string  `json:"imageURL"`
+	Type           string  `json:"type"`
 }
 
 type TeamInfo struct {
